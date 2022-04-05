@@ -5,8 +5,11 @@ using UnityEngine;
 public class PumpkinGenerator : MonoBehaviour
 {
     public GameObject gameObject;
+    //生成時間間隔
     private float interval = 0.3f;
+    //生成座標
     private float StartPos_X = 0.0f;
+    //生成最大数
     private int CountMax = 64;
 
     // Start is called before the first frame update

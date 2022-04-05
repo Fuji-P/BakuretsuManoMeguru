@@ -21,7 +21,7 @@ public class BackGroundController : MonoBehaviour
         Scroll();
     }
 
-    public void Scroll()
+    private void Scroll()
     {
         //x座標をscrollSpeed分動かす
         transform.Translate(-scrollSpeed, 0, 0);

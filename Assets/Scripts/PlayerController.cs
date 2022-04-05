@@ -7,28 +7,40 @@ public class PlayerController : MonoBehaviour
 {
     public float speed = 6.0f;
     public float moveableRange = 6.2f;
-    float shot_speed = 600;
-    [SerializeField] GameObject BlueStar;
-    private Animator animator;
+    private float shot_speed = 600;
+    //「YellowStar」の発射方向
+    private float shot_ForceX = 0.0f;
+    private float shot_ForceY = 0.0f;
+    //ダメージ中判定
     private bool Damage = false;
+    //リスポーン後判定
     private bool Resporn = false;
+    //リスポーン用ボタン押下回数
     private int RespornCount = 0;
+    //リスポーン用最大ボタン押下回数
     private int _RespornCountMax = 5;
+
+    //オーディオソース群
     public AudioClip ShotSE;
     public AudioClip DamageSE;
     public AudioClip CountSE;
     public AudioClip HeartSE;
     AudioSource audioSource;
-    public GameObject CountTextObj;
+
+    //ダメージカウント用テキスト
     public Text CountText;
+    public GameObject CountTextObj;
+
+    //ダメージカウント用時間
     private float countTime = 0f;
     private float nextCountTime = 0f;
     private int Count = 0;
-    float shot_ForceX = 0.0f;
-    float shot_ForceY = 0.0f;
-    [SerializeField] GameObject YellowStar;
+
+    private Animator animator;
     public GameManager gameManager;
     private SpriteRenderer renderer;
+    [SerializeField] GameObject YellowStar;
+    [SerializeField] GameObject BlueStar;
 
     // Start is called before the first frame update
     void Start()
@@ -42,6 +54,7 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //リスポーン後の点滅処理
         if (Resporn == true)
         {
             float level = Mathf.Abs(Mathf.Sin(Time.time * 20));
@@ -62,22 +75,35 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void playerMove()
+    private void PlayerResporn()
     {
-        if (Damage == true)
+        if (Damage == false)
         {
             return;
         }
-        // 通常スピード
-        speed = 6.0f;
-        //Shift押下で低速化
-        if (Input.GetKey(KeyCode.LeftShift) ||
-            Input.GetKey(KeyCode.RightShift))
+        if (Input.GetKeyDown(KeyCode.Z) ||
+            Input.GetKeyDown(KeyCode.X))
         {
-            speed = 3.0f;
+            RespornCount += 1;
         }
-        transform.Translate(Input.GetAxisRaw("Horizontal") * speed * Time.deltaTime, 0, 0);
-        transform.position = new Vector2(Mathf.Clamp(transform.position.x, -moveableRange, moveableRange), transform.position.y);
+        if (RespornCountMax <= RespornCount)
+        {
+            PlayerCountReset();
+        }
+    }
+
+    private void PlayerCountReset()
+    {
+        animator.SetBool("Damage", false);
+        CountTextObj.SetActive(false);
+        Damage = false;
+        Resporn = true;
+        StartCoroutine(OnDamage());
+        Count = 0;
+        nextCountTime = 0;
+        countTime = 0;
+        RespornCount = 0;
+        RespornCountMax += 1;
     }
 
     private void PlayerShot()
@@ -95,6 +121,61 @@ public class PlayerController : MonoBehaviour
             Destroy(BlueStarShot, 0.6f);
         }
     }
+
+    private void playerMove()
+    {
+        if (Damage == true)
+        {
+            return;
+        }
+        // 通常スピード
+        speed = 6.0f;
+
+        //Shift押下で低速化
+        if (Input.GetKey(KeyCode.LeftShift) ||
+            Input.GetKey(KeyCode.RightShift))
+        {
+            speed = 3.0f;
+        }
+
+        transform.Translate(Input.GetAxisRaw("Horizontal") * speed * Time.deltaTime, 0, 0);
+        transform.position = new Vector2(Mathf.Clamp(transform.position.x, -moveableRange, moveableRange), transform.position.y);
+    }
+
+    private void PlayerDamageCount()
+    {
+        if (Damage == false)
+        {
+            return;
+        }
+        if(countTime >= nextCountTime)
+        {
+            PlayerCountTime();
+        }
+        countTime += Time.deltaTime;
+    }
+
+    private void PlayerCountTime()
+    {
+        audioSource.PlayOneShot(CountSE);
+        Count++;
+        CountText.text = Count.ToString();
+        CountTextObj.SetActive(true);
+        if(countTime >= 3)
+        {
+            PlayerGameOver();
+            return;
+        }
+        nextCountTime = countTime + 1;
+    }
+
+    private void PlayerGameOver()
+    {
+        PlayerShotGameOver();
+        Destroy(gameObject);
+        gameManager.GameOverFlag = true;
+    }
+
     private void PlayerShotGameOver()
     {
         //ゲームオーバー時星を4つ生成
@@ -108,60 +189,12 @@ public class PlayerController : MonoBehaviour
             Destroy(YellowStarShot, 0.3f);
         }
     }
-    private void PlayerDamageCount()
-    {
-        if (Damage == false)
-        {
-            return;
-        }
-        if(countTime >= nextCountTime)
-        {
-            audioSource.PlayOneShot(CountSE);
-            Count++;
-            CountText.text = Count.ToString();
-            CountTextObj.SetActive(true);
-            if(countTime >= 3)
-            {
-                //ゲームオーバー
-                PlayerShotGameOver();
-                Destroy(gameObject);
-                gameManager.GameOverFlag = true;
-                return;
-            }
-            nextCountTime = countTime + 1;
-        }
-        countTime += Time.deltaTime;
-    }
 
-    private void PlayerResporn()
+    private void PlayerDamage()
     {
-        if (Damage == false)
-        {
-            return;
-        }
-        if (Input.GetKeyDown(KeyCode.Z) ||
-            Input.GetKeyDown(KeyCode.X))
-        {
-            RespornCount += 1;
-        }
-        if (RespornCountMax <= RespornCount)
-        {
-            CountReset();
-        }
-    }
-
-    private void CountReset()
-    {
-        animator.SetBool("Damage", false);
-        CountTextObj.SetActive(false);
-        Damage = false;
-        Resporn = true;
-        StartCoroutine(OnDamage());
-        Count = 0;
-        nextCountTime = 0;
-        countTime = 0;
-        RespornCount = 0;
-        RespornCountMax += 1;
+        audioSource.PlayOneShot(DamageSE);
+        animator.SetBool("Damage", true);
+        Damage = true;
     }
 
     private void OnTriggerEnter2D(Collider2D collider)
@@ -184,9 +217,7 @@ public class PlayerController : MonoBehaviour
             collider.gameObject.tag == "YellowStar")
         {
             //ダメージ判定
-            audioSource.PlayOneShot(DamageSE);
-            animator.SetBool("Damage", true);
-            Damage = true;
+            PlayerDamage();
         }
     }
 
