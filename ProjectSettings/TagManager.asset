@@ -1,0 +1,63 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!78 &1
+TagManager:
+  serializedVersion: 2
+  tags:
+  - Pumpkin
+  - BlueStar
+  - YellowStar
+  - Heart
+  - Range
+  layers:
+  - Default
+  - TransparentFX
+  - Ignore Raycast
+  - Pumpkin
+  - Water
+  - UI
+  - YellowStar
+  - Player
+  - BlueStar
+  - Heart
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  m_SortingLayers:
+  - name: Back
+    uniqueID: 4178106589
+    locked: 0
+  - name: Pumpkin
+    uniqueID: 2197010447
+    locked: 0
+  - name: Star
+    uniqueID: 2038647079
+    locked: 0
+  - name: Player
+    uniqueID: 4082928049
+    locked: 0
+  - name: Default
+    uniqueID: 0
+    locked: 0
+  - name: 
+    uniqueID: 2691801755
+    locked: 0
