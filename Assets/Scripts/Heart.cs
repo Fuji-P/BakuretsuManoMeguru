@@ -5,6 +5,7 @@ using UnityEngine;
 public class Heart : MonoBehaviour
 {
     Rigidbody2D itemRd2d;
+    //滞在時間
     public float deleteTime = 1.3f;
 
     // Start is called before the first frame update

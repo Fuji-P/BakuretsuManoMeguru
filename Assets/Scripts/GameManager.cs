@@ -51,6 +51,7 @@ public class GameManager : MonoBehaviour
 
     public void PlayerGameOver()
     {
+        //「YellowStar」が存在しなくなってからゲームオーバーとする
         int count = GameObject.FindGameObjectsWithTag("YellowStar").Length;
         if (count <= 0)
         {
