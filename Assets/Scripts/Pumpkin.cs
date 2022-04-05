@@ -31,17 +31,27 @@ public class Pumpkin : MonoBehaviour
 
     private void PumpkinMove()
     {
-        Force_X = Random.Range(-1, 2);
+        Force_X = Random.Range(-2.0f, 2.0f);
         while(Force_X == 0)
         {
-            Force_X = Random.Range(-1, 2);
+            Force_X = Random.Range(-2.0f, 2.0f);
         }
-        if (transform.position.x >= 1.0f)
+        if (Force_X > 0 &&
+            Force_X < 2.0)
         {
-            Force_X = -1.0f;
+            Force_X = 2.0f;
         }
-        else if (transform.position.x <= -1.0f) {
-            Force_X = 1.0f;
+        else if (Force_X > -2.0 &&
+            Force_X < 0)
+        {
+            Force_X = -2.0f;
+        }
+        if (transform.position.x >= 4.0f)
+        {
+            Force_X = -2.0f;
+        }
+        else if (transform.position.x <= -4.0f) {
+            Force_X = 2.0f;
         }
         Vector2 force = new Vector2(Force_X * 200, 0);
         rigidbody2D.AddForce(force);

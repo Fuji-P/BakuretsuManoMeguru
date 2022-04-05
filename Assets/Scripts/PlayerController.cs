@@ -13,7 +13,7 @@ public class PlayerController : MonoBehaviour
     private bool Damage = false;
     private bool Resporn = false;
     private int RespornCount = 0;
-    private static int _RespornCountMax = 5;
+    private int _RespornCountMax = 5;
     public AudioClip ShotSE;
     public AudioClip DamageSE;
     public AudioClip CountSE;

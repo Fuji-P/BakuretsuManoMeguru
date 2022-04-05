@@ -5,7 +5,7 @@ using UnityEngine;
 public class PumpkinGenerator : MonoBehaviour
 {
     public GameObject gameObject;
-    private float interval = 3.0f;
+    private float interval = 0.3f;
     private float StartPos_X = 0.0f;
     private int CountMax = 64;
 
