@@ -1,5 +1,8 @@
 # BakuretsuManoMeguru
 
+■Unityroomリンク
+https://unityroom.com/games/hiori
+
 ■開発の経緯・ストーリー
 
 Unityの勉強がてら既存のゲームの再現をしてみたいと思い制作しました。
